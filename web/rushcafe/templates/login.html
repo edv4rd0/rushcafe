@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static "rushcafe/css/login.css" %}" />
+{% endblock %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="text-center">
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+{% load cssfilters %}
+<form class="form-signin" method="post" action="{% url 'login' %}">
+{% csrf_token %}
+<div class="form-group  ">
+<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+    <span class="sr-only">{{ form.username.label_tag }}</span>
+    {{ form.username|addclass:'form-control' }}
+
+
+    <span class="sr-only">{{ form.password.label_tag}}</span>
+    {{ form.password|addclass:'form-control' }}
+
+
+<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+<input type="hidden" name="next" value="{{ next }}" />
+</div>
+</form>
+</div>
+
+{% endblock %}
