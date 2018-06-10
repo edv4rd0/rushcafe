@@ -12,6 +12,9 @@ class MenuCategory(models.Model):
         max_length=20,
     )
 
+    def __str__(self):
+        return self.name
+
 
 class MenuItem(models.Model):
     class Meta:
@@ -23,7 +26,7 @@ class MenuItem(models.Model):
         help_text='Category name',
         max_length=20,
     )
-    models.ForeignKey(
+    category = models.ForeignKey(
         MenuCategory,
         related_name='menu_items',
         on_delete=models.CASCADE
@@ -33,3 +36,8 @@ class MenuItem(models.Model):
         decimal_places=2,
         null=False
     )
+
+    def __str__(self):
+        return self.name
+
+

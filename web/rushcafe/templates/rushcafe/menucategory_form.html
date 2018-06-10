@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% load cssfilters %}
+
+<form class="form" action="{% url 'menu-category' 1 %}" method="post">
+        {% csrf_token %}
+        {{ form.name|addclass:'form-control' }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

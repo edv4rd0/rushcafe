@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% load cssfilters %}
+
 <form action="{% url 'menu-category-add' %}" method="post">
     {% csrf_token %}
     {{ form }}

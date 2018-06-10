@@ -10,10 +10,7 @@ class MenuTestCase(TestCase):
     """Tests for the Cafe Menu CMS"""
     def setUp(self):
         mc = MenuCategory.objects.create(name="Starters")
-        mc.save()
-        mi = MenuItem.objects.create(name="Burger and Fries", price=12.99)
-        mi.category = mc
-        mi.save()
+        mi = MenuItem.objects.create(name="Burger and Fries", price=12.99, category=mc)
 
     @classmethod
     def setUpTestData(cls):
@@ -97,7 +94,7 @@ class MenuTestCase(TestCase):
         self.client.login(username='cmsadmin', password='pass@123')
         response = self.client.get(reverse('menu-item', kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'rushcafe/menuitem_detail.html')
+        self.assertTemplateUsed(response, 'rushcafe/menuitem_form.html')
         self.assertContains(response, 'Burger and Fries')
 
     def test_item_details_post(self):
@@ -105,7 +102,7 @@ class MenuTestCase(TestCase):
         self.client.login(username='cmsadmin', password='pass@123')
         form_data = {'name': 'Cheesecake', 'category': 1, 'price': 17.99}
         response = self.client.post(reverse('menu-item', kwargs={'pk': 7}), form_data)
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 404)
 
     def test_category_details(self):
         """Category should be retrieved and the name should be in the template.
@@ -113,7 +110,7 @@ class MenuTestCase(TestCase):
         self.client.login(username='cmsadmin', password='pass@123')
         response = self.client.get(reverse('menu-category', kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'rushcafe/menucategory_detail.html')
+        self.assertTemplateUsed(response, 'rushcafe/menucategory_form.html')
         self.assertContains(response, 'Starters')
 
     def test_category_details_post(self):
@@ -121,4 +118,4 @@ class MenuTestCase(TestCase):
         self.client.login(username='cmsadmin', password='pass@123')
         form_data = {'name': 'Sides'}
         response = self.client.post(reverse('menu-category', kwargs={'pk': 7}), form_data)
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 404)

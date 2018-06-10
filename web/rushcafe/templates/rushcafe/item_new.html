@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+{% load cssfilters %}
+
 <form action="{% url 'menu-item-add' %}" method="post">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
+    {{ form.name|addclass:'form-control' }}
+    {{ form.category|addclass:'form-control' }}
+    {{ form.price|addclass:'form-control'}}
+<button type="submit">Create</button>
 </form>
 {% endblock %}

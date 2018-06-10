@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% load cssfilters %}
+<form action="{% url 'menu-item' 1 %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+        {{ form.name.label_tag }}
+        {{ form.name|addclass:'form-control' }}
+        </div>
+        <div class="form-group">
+        {{ form.category.label_tag }}
+        {{ form.category|addclass:'form-control' }}
+        </div>
+        <div class="form-group">
+        {{ form.price.label_tag }}
+        {{ form.price|addclass:'form-control'}}
+        </div>
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

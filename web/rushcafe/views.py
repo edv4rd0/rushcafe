@@ -1,12 +1,12 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.views import generic
-from django.conf import settings
+from django.views.generic.edit import UpdateView
 
-from rushcafe.forms import MenuItemForm, MenuCategoryForm
+from rushcafe.forms import MenuCategoryForm, MenuItemForm
 from rushcafe.models import MenuCategory, MenuItem
 
 
@@ -78,11 +78,16 @@ def new_menu_item(request):
     return render(request, 'rushcafe/item_new.html', {'form': form})
 
 
-class MenuItemView(PermissionRequiredMixin, generic.DetailView):
+class MenuItemView(PermissionRequiredMixin, UpdateView):
     model = MenuItem
     permission_required = ('rushcafe.change_menuitem', 'rushcafe.delete_menuitem')
+    form_class = MenuItemForm
 
+    def get_initial(self):
+        return { 'category' : self.object.category.id }
+    
 
-class MenuCategoryView(PermissionRequiredMixin, generic.DetailView):
+class MenuCategoryView(PermissionRequiredMixin, UpdateView):
     model = MenuCategory
     permission_required = ('rushcafe.change_menucategory', 'rushcafe.delete_menucategory')
+    fields = ['name']
