@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Menu Items{% endblock %}
+
+{% block content %}
+{% if form %}
+<form action="{% url 'menu-item-add' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+</form>
+{% endif %}
+    
+{% for item in menu_items_list %}
+{{ item.name }}<br />
+{{ item.category }}<br />
+{{ item.price }}<br />
+{% endfor %}
+
+<div class="pagination">
+<span class="step-links">
+    {% if menu_items_list.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ menu_items_list.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ menu_items_list.number }} of {{ menu_items_list.paginator.num_pages }}.
+    </span>
+
+    {% if menu_items_list.has_next %}
+        <a href="?page={{ menu_items_list.next_page_number }}">next</a>
+        <a href="?page={{ menu_items_list.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+</span>
+</div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Menu Categories{% endblock %}
+
+{% block content %}
+{% if form %}
+<form action="{% url 'menu-category-add' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+</form>
+{% endif %}
+
+{% for category in menu_category_list %}
+{{ category.name }}<br />
+{% endfor %}
+
+<div class="pagination">
+<span class="step-links">
+    {% if menu_category_list.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ menu_category_list.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ menu_category_list.number }} of {{ menu_category_list.paginator.num_pages }}.
+    </span>
+
+    {% if menu_category_list.has_next %}
+        <a href="?page={{ menu_category_list.next_page_number }}">next</a>
+        <a href="?page={{ menu_category_list.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+</span>
+</div>
+
+{% endblock %}

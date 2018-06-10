@@ -2,6 +2,9 @@ from django.db import models
 
 
 class MenuCategory(models.Model):
+    class Meta:
+        ordering = ['-name']
+    
     name = models.CharField('Name',
         blank=False,
         null=False,
@@ -11,6 +14,9 @@ class MenuCategory(models.Model):
 
 
 class MenuItem(models.Model):
+    class Meta:
+        ordering = ['-name']
+
     name = models.CharField('Name',
         blank=False,
         null=False,

@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>CafeCMS</h1>
+      
+<h1 class="display-4 mt-5">Dashboard</h1>
+<p class="lead mb-5">Add new categories and items to your cafe's menu from this CMS admin site.</p>
+{% load static %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm d-flex">     
+        <div class="card">
+            <img class="card-img-top" src="{% static "rushcafe/images/cms_menu_category.jpg" %}" alt="New Menu Category">
+            <div class="card-body">
+                <h5 class="card-title">New Menu Category</h5>
+                <p class="card-text">Add a new menu category</p>
+                <a href="{% url 'menu-category-add' %}" class="btn btn-primary">Add</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm d-flex">     
+            <div class="card" >
+            <img class="card-img-top" src="{% static "rushcafe/images/cms_menu_item.jpg" %}" alt="New Menu Item">
+            <div class="card-body">
+                <h5 class="card-title">New Menu Item</h5>
+                <p class="card-text">Add menu item</p>
+                <a href="{% url 'menu-item-add' %}" class="btn btn-primary">Add</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
