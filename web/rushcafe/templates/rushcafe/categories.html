@@ -3,16 +3,44 @@
 
 {% block content %}
 {% if form %}
-<form action="{% url 'menu-category-add' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit" />
-</form>
+{% load cssfilters %}
+<p class="mt-5">
+    <a class="btn btn-primary" data-toggle="collapse" href="#collapseForm" role="button" aria-expanded="false" aria-controls="collapseForm">
+        New Category
+    </a>
+</p>
+<div class="collapse" id="collapseForm">
+    <div class="card card-body">
+        <form action="{% url 'menu-category-add' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }}                
+                {{ form.name|addclass:'form-control' }}
+            </div>
+            <button class="btn btn-primary" type="submit">Add Category</button>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
+</div>
+<table class="table table-striped">
+{% else %}
+<table class="mt-5 table table-striped">
 {% endif %}
-
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody>
 {% for category in menu_category_list %}
-{{ category.name }}<br />
+        <tr>
+            <th scope="row">{{category.id}}</th>
+            <td>{{category.name}}<a class="float-right btn btn-outline-info ml-auto" href="{% url 'menu-category' category.id %}">Edit</a></td>
+        </tr>
 {% endfor %}
+    </tbody>
+</table>
 
 <div class="pagination">
 <span class="step-links">

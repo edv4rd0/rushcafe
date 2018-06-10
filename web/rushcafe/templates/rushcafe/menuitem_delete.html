@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% load cssfilters %}
+<h2 class="display-5 mt-5">Menu Item</h1>
+    <p class="lead mb-5">View and edit your menu item below.</p>
+
+<form action="{% url 'menu-item-delete' menuitem.id %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <h4>Name: {{ menuitem.name }}</h4>
+    </div>
+    <div class="mb-4 form-check">
+            {{ form.deleted|addclass:'form-check-input' }} <label class="form-check-label"  for="id_deleted">Really delete?</label>               
+    </div>
+    <button class="btn btn-lg btn-danger" type="submit">Confirm Delete</button>
+    <a href="{% url 'menu-item' menuitem.id %}" class="ml-2 btn btn-lg btn-outline-primary">Cancel</a>
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}

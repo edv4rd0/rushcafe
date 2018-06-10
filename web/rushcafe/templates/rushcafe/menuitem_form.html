@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 {% load cssfilters %}
-<form action="{% url 'menu-item' 1 %}" method="post">
+<h2 class="display-5 mt-5">Menu Item</h1>
+    <p class="lead mb-5">View and edit your menu item below.</p>
+
+<form action="{% url 'menu-item' menuitem.id %}" method="post">
         {% csrf_token %}
         <div class="form-group">
         {{ form.name.label_tag }}
@@ -15,7 +18,9 @@
         {{ form.price.label_tag }}
         {{ form.price|addclass:'form-control'}}
         </div>
-    <input type="submit" value="Submit" />
+    <input class="btn btn-lg btn-primary" type="submit" value="Submit" />
+    <a href="{% url 'menu-item-delete' menuitem.id %}" class="float-right btn btn-lg btn-outline-danger">Delete</a>
+    <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
 {% endblock %}

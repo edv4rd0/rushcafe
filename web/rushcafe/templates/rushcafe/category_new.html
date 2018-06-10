@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 {% load cssfilters %}
+<h2 class="display-5 mt-5">Add Menu Category</h1>
+<p class="lead mb-5">Add a new category to your menu below.</p>
 
 <form action="{% url 'menu-category-add' %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
+    {% csrf_token %}        
+    <div class="form-group">                
+        {{ form.name.label_tag }}    
+        {{ form.name|addclass:'form-control' }}
+    </div>
+    <button class="btn btn-lg btn-primary" type="submit">Add Category</button>
+    <input type="hidden" name="next" value="{{ next }}" />
 </form>
 {% endblock %}

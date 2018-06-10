@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 {% load cssfilters %}
-
-<form class="form" action="{% url 'menu-category' 1 %}" method="post">
+<h2 class="display-5 mt-5">Menu Category</h1>
+    <p class="lead mb-5">View and edit your menu category below.</p>
+<form class="form" action="{% url 'menu-category' menucategory.id %}" method="post">
         {% csrf_token %}
+    <div class="form-group">
+        {{ form.name.label_tag }}                
         {{ form.name|addclass:'form-control' }}
-    <input type="submit" value="Submit" />
+    </div>
+    <button class="btn btn-lg btn-primary" type="submit">Update</button>
+    <a href="{% url 'menu-category-delete' menucategory.id %}" class="float-right btn btn-lg btn-outline-danger">Delete</a>
+    <input type="hidden" name="next" value="{{ next }}" />
 </form>
 {% endblock %}

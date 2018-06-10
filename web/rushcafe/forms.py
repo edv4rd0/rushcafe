@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.forms import ModelForm, ModelChoiceField
+from django.forms import ModelForm, ModelChoiceField, Form
 from django.forms.widgets import PasswordInput, TextInput, NumberInput
 
 
@@ -10,6 +10,21 @@ class MenuCategoryForm(ModelForm):
     class Meta:
         model = MenuCategory
         fields = ['name']
+
+
+class DeleteForm(Form):
+    deleted = forms.BooleanField(required=True)
+
+    def is_valid(self):
+        """We will invalidate data if it's not setting the delete flag.
+        This simplifies the view logic."""
+        valid = super().is_valid()
+
+        if valid:
+            if self.cleaned_data['deleted'] is True:
+                return True
+        return valid
+        
 
 
 class MenuItemForm(ModelForm):

@@ -11,6 +11,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow">
                 <a class="navbar-brand" href="{% url 'index' %}">CafeCMS</a>
+                {% if user.is_authenticated %}                                        
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -20,9 +21,9 @@
                             <a class="dropdown-item" href="{% url 'menu-categories' %}">Menu Categories</a>
                             <a class="dropdown-item" href="{% url 'menu-items' %}">Menu Items</a>
                         </div>
+
                     </li>
                 </ul>
-                {% if user.is_authenticated %}
                     <span class="mr-2">Hello, {{ user.get_username }}</span>
                     <form action="{% url 'logout' %}">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
