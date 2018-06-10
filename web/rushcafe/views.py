@@ -26,9 +26,9 @@ def menu_categories(request):
     if page is None or page == '1':
         if request.user.has_perms(('rushcafe.add_menucategory',)):
             form = MenuCategoryForm()
-            return render(request, 'menu/categories.html',
+            return render(request, 'rushcafe/categories.html',
                         {'menu_category_list': categories, 'form': form})
-    return render(request, 'menu/categories.html',
+    return render(request, 'rushcafe/categories.html',
                   {'menu_category_list': categories})
 
 
@@ -44,9 +44,9 @@ def menu_items(request):
     if page is None or page == '1':
         if request.user.has_perms(('rushcafe.add_menuitem',)):
             form = MenuItemForm()
-            return render(request, 'menu/items.html',
+            return render(request, 'rushcafe/items.html',
                     {'menu_items_list': items, 'form': form})
-    return render(request, 'menu/items.html', {'menu_items_list': items})
+    return render(request, 'rushcafe/items.html', {'menu_items_list': items})
     
 
 @permission_required('rushcafe.add_menucategory')
@@ -57,11 +57,11 @@ def new_menu_category(request):
         if form.is_valid():
             instance = form.save()
             return redirect('menu-category', pk=instance.pk)
-        return render(request, 'menu/category_new.html', {'form': form})
+        return render(request, 'rushcafe/category_new.html', {'form': form})
 
     form = MenuCategoryForm()
 
-    return render(request, 'menu/category_new.html', {'form': form})
+    return render(request, 'rushcafe/category_new.html', {'form': form})
 
 
 @permission_required('rushcafe.add_menuitem')
@@ -72,10 +72,10 @@ def new_menu_item(request):
         if form.is_valid():
             instance = form.save()
             return redirect('menu-item', pk=instance.pk)
-        return render(request, 'menu/item_new.html', {'form': form})
+        return render(request, 'rushcafe/item_new.html', {'form': form})
 
     form = MenuItemForm()
-    return render(request, 'menu/item_new.html', {'form': form})
+    return render(request, 'rushcafe/item_new.html', {'form': form})
 
 
 class MenuItemView(PermissionRequiredMixin, generic.DetailView):
