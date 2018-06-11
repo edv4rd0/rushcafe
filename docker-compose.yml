@@ -1,0 +1,39 @@
+version: '3.2'
+
+services:
+  nginx:
+    build: ./nginx/
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+        - web
+    volumes:
+        - /static:/static
+  web:
+    restart: always
+    build: ./web/
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+        - cms-db
+    volumes:
+      - ./web:/usr/src/web
+      - /static:/static
+    environment:
+        - DB_NAME=cafecms
+        - DB_USER=cmsdbuser
+        - DB_PASS=passwd
+        - DB_HOST=cms-db
+        - DB_PORT=3306
+  cms-db:
+    image: postgres
+    restart: always
+    volumes:
+       - dbdata
+    environment:
+       - POSTGRES_USER=cmsdbuser
+       - POSTGRES_PASSWORD=passwd
+       - POSTGRES_DB=cafecms
+volumes:
+  dbdata:
+
