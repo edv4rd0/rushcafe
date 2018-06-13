@@ -6,8 +6,6 @@ services:
     restart: always
     ports:
       - "80:80"
-    # depends_on:
-    #     - web
     volumes:
         - /static:/static
   web:
@@ -20,23 +18,15 @@ services:
     volumes:
       - /home/ubuntu/web:/usr/src/web
       - /static:/static
-    environment:
-        - DB_NAME=cafecms
-        - DB_USER=cmsdbuser
-        - DB_PASS=passwd
-        - DB_HOST=cms-db
-        - DB_PORT=3306
-        - DIALOGFLOW_TOKEN=REDACTED
-        - REDIS_SERVER=redis
+    env_file:
+      - ./docker/env_web
   cms-db:
     image: postgres
     restart: always
     volumes:
        - dbdata
-    environment:
-       - POSTGRES_USER=cmsdbuser
-       - POSTGRES_PASSWORD=passwd
-       - POSTGRES_DB=cafecms
+    env_file:
+       - ./docker/env_db
 volumes:
   dbdata:
 

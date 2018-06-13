@@ -4,3 +4,4 @@ channels==2.1.1
 channels-redis==2.2.1
 requests==2.7.0
 dialogflow-lite==0.0.6
+psycopg2==2.7.4
