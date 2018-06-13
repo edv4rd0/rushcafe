@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - "80:80"
+    depends_on:
+      - web
     volumes:
         - static:/static
   web:
@@ -14,7 +16,6 @@ services:
     command: daphne -b 0.0.0.0 -p 8000 cafesite.asgi:application
     depends_on:
         - cms-db
-        - nginx
     volumes:
       - /home/ubuntu/web:/usr/src/web
       - static:/static
