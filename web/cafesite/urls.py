@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from cafesite.views import frontend
+
 
 urlpatterns = [
     path('cafe/', include('rushcafe.urls')),
     path('admin/', admin.site.urls),
+    path('', frontend, name='frontend'),
 ]

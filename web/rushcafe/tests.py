@@ -10,17 +10,23 @@ class MenuTestCase(TestCase):
     """Tests for the Cafe Menu CMS"""
     def setUp(self):
         mc = MenuCategory.objects.create(name="Starters")
-        mi = MenuItem.objects.create(name="Burger and Fries", price=12.99, category=mc)
+        MenuItem.objects.create(
+            name="Burger and Fries",
+            price=12.99,
+            category=mc
+        )
 
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create(username='cmsadmin')
         user.set_password('pass@123')
-        permissions = Permission.objects.filter(content_type__app_label='rushcafe')
+        permissions = Permission.objects.filter(
+            content_type__app_label='rushcafe'
+        )
         group = Group(name='cafecms')
         group.save()
         group.permissions.set(permissions)
-        
+
         user.groups.add(group)
         user.save()
 
@@ -52,7 +58,8 @@ class MenuTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_add_item_bad_permissions(self):
-        """Tests GET request to add item page with logged in user and no permissions"""
+        """Tests GET request to add item page with logged in user
+        and no permissions"""
         self.client.login(username='noperms', password='pass@123')
         response = self.client.get(reverse('menu-item-add'))
         self.assertEqual(response.status_code, 302)
@@ -72,7 +79,7 @@ class MenuTestCase(TestCase):
         form_data = {'name': 'Cheesecake', 'category': 2, 'price': 17.99}
         form = MenuItemForm(data=form_data)
         self.assertFalse(form.is_valid())
-    
+
     def test_category_form(self):
         """Test the form"""
         form_data = {'name': 'Mains'}
@@ -87,7 +94,7 @@ class MenuTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('menu-item', kwargs={'pk': 2}),
                              status_code=302, target_status_code=200)
-    
+
     def test_item_details(self):
         """Item should be retrieved and the name should be in the template.
         XXX: Future tests should be more involved, such as using selenium"""
@@ -101,7 +108,10 @@ class MenuTestCase(TestCase):
         """Endpoint does not handle creation"""
         self.client.login(username='cmsadmin', password='pass@123')
         form_data = {'name': 'Cheesecake', 'category': 1, 'price': 17.99}
-        response = self.client.post(reverse('menu-item', kwargs={'pk': 7}), form_data)
+        response = self.client.post(
+            reverse('menu-item', kwargs={'pk': 7}),
+            form_data
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_category_details(self):
@@ -117,5 +127,8 @@ class MenuTestCase(TestCase):
         """Endpoint does not handle creation"""
         self.client.login(username='cmsadmin', password='pass@123')
         form_data = {'name': 'Sides'}
-        response = self.client.post(reverse('menu-category', kwargs={'pk': 7}), form_data)
+        response = self.client.post(
+            reverse('menu-category', kwargs={'pk': 7}),
+            form_data
+        )
         self.assertEqual(response.status_code, 404)

@@ -12,10 +12,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from django.urls import reverse
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "cafesite/templates")
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +27,9 @@ SECRET_KEY = 'y+l3c4li_fsonm-v=1#+d0l8bde$s+_qk1_!e4&g(7)x@lnt9d'
 DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0',
-                 '127.0.0.1']
+                 '127.0.0.1',
+                 '54.252.150.46',
+                 'restaurantattheendoftheuniverse.xyz']
 
 
 # Application definition
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'rushcafe',
 ]
 
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'cafesite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,8 +74,31 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cafesite.wsgi.application'
+ASGI_APPLICATION = 'cafesite.routing.application'
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "asgi_redis.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+#         },
+#         "ROUTING": "chat.routing.channel_routing",
+#     },
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [( os.environ.get('REDIS_SERVER'), 6379)],
+#         },
+#     },
+# }
 
 
+DIALOGFLOW = {
+    'client_access_token': os.environ.get('DIALOGFLOW_TOKEN'),
+}
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -123,7 +148,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT='/static'
+STATIC_ROOT = '/static'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

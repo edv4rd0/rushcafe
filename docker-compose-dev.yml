@@ -2,23 +2,24 @@ version: '3.2'
 
 services:
   nginx:
-    build: ./nginx/
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "80:80"
-    # depends_on:
-    #     - web
+    depends_on:
+        - web
     volumes:
         - /static:/static
   web:
     restart: always
     build: ./web/
-    command: daphne -b 0.0.0.0 -p 8000 cafesite.asgi:application
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
         - cms-db
-        - nginx
     volumes:
-      - /home/ubuntu/web:/usr/src/web
+      - ./web:/usr/src/web
       - /static:/static
     environment:
         - DB_NAME=cafecms
@@ -26,8 +27,6 @@ services:
         - DB_PASS=passwd
         - DB_HOST=cms-db
         - DB_PORT=3306
-        - DIALOGFLOW_TOKEN=REDACTED
-        - REDIS_SERVER=redis
   cms-db:
     image: postgres
     restart: always
