@@ -9,25 +9,25 @@ $(function() {
     
     // When we're using HTTPS, use WSS too.
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "/cafe/ws/chat/");
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/cafe/ws/chat/");
     // var chatsock = new WebSocket("wss://echo.websocket.org/")
     // var chatsock = new WebSocket(ws_scheme + '://127.0.0.1:8000/cafe/ws/chat/');    
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
-        var chat = $("#chat")
+        var chat = $("#chat");
         var css_class = data.is_bot ? "bot" : "me";
 
         chat.append(
             $("<li class='" + css_class + "'></li>").append(urlify(data.message.toString()))
-        )
-        chat.scrollTop(chat.height())
+        );
+        $("#chat").animate({scrollTop: $("#chat").prop("scrollHeight")}, 500);
     };
 
     function send(event) {
         var message = $('#message').val();
         var chat = $("#chat")
         chat.append($("<li class='me'></li>").text("You: " + message));
-        chat.scrollTop(chat.height())
+        $("#chat").animate({scrollTop: $("#chat").prop("scrollHeight")}, 500);
         chatsock.send(JSON.stringify({
             'message': message}));
         $("#message").val('').focus();
