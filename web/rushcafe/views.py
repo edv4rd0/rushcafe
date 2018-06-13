@@ -1,14 +1,14 @@
 import json
-from decimal import Decimal, InvalidOperation
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import (get_object_or_404, redirect, render,
                               render_to_response, reverse)
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.views.generic.edit import UpdateView
 
 from rushcafe.forms import DeleteForm, MenuCategoryForm, MenuItemForm
@@ -165,6 +165,7 @@ def handler404(request, exception, template_name='404.html'):
 
 
 @csrf_exempt
+@require_http_methods(["POST"])
 def webhook(request):
     """ Example full JSON:
     {
@@ -189,8 +190,13 @@ def webhook(request):
     }
     """
     req = json.loads(request.body)
+    
+    try:
+        action = req['queryResult']['action']
+    except KeyError:
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
-    message = get_action_response(req)
+    message = get_action_response(action, req)
 
     body = {
         "fulfillmentText": message,

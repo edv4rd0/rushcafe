@@ -3,7 +3,6 @@ from decimal import Decimal, InvalidOperation
 
 from rushcafe.models import MenuCategory, MenuItem
 
-
 translator = str.maketrans('', '', string.punctuation)
 
 
@@ -36,15 +35,11 @@ def get_menu_items(category=None, less_than_price=None):
     return menu_items
 
 
-def get_action_response(req):
+def get_action_response(action, req):
     """Determine the action requested by DialogFlow and respond with 
     data and message.
     
     Really need to refactor with the text strings out."""
-
-    action = req['queryResult']['action']
-    message = "Can't help sorry"
-
     if action == 'get-menu-categories':
         result_data = [c.name for c in MenuCategory.objects.filter(deleted=False)]
         if result_data:
@@ -85,4 +80,4 @@ def get_action_response(req):
         else:
             return "Sorry, could you try being more specific"
 
-    return message
+    return "Can't help sorry"
