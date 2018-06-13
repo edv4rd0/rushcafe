@@ -13,6 +13,7 @@ from django.views.generic.edit import UpdateView
 
 from rushcafe.forms import DeleteForm, MenuCategoryForm, MenuItemForm
 from rushcafe.models import MenuCategory, MenuItem
+from rushcafe.webhook_actions import get_action_response
 
 
 @login_required
@@ -188,57 +189,8 @@ def webhook(request):
     }
     """
     req = json.loads(request.body)
-    print(req)
 
-    action = req['queryResult']['action']
-    message = "Can't help sorry"
-    context = {}
-
-    if action == 'get-menu-categories':
-        result_data = [c.name for c in MenuCategory.objects.filter(deleted=False)]
-        message = 'We have the following categories on our menu: ' + ', '.join(result_data)
-    elif action == 'get-menu-items':
-        result_data = [i.name for i in MenuItem.objects.filter(deleted=False)]
-        message = 'We have the following options on our menu: ' + ', '.join(result_data)
-    elif action == 'get-items-in-category':
-        cat_name = req['queryResult']['parameters']['menu-category']
-        category = MenuCategory.objects.filter(name=cat_name, deleted=False).first()
-        if category:
-            result_data = [i.name for i in category.menu_items.filter(deleted=False)]
-            message = 'We have the following options in {0}: '.format(category.name) + ', '.join(result_data)
-        else:
-            message = 'We don\'t have that category on our menu, sorry'
-    elif action == 'get-cheapest-item':
-        menu_item = MenuItem.objects.filter(deleted=False).order_by('price').first()
-        if menu_item:
-            message = '{0} is our cheapest item on the menu at ${1}'.format(menu_item.name, menu_item.price)
-        else:
-            message = 'We have nothing on our menu'
-    elif action == 'menu-items-under-price':
-        try:
-            amount = Decimal(req['queryResult']['parameters']['unit-currency']['amount'])
-        except (TypeError, InvalidOperation):
-            try:
-                amount = req['queryResult']['parameters']['number']
-            except (TypeError, InvalidOperation, KeyError):
-                amount = None
-
-        try:
-            category = req['queryResult']['parameters']['menu-category']
-        except KeyError:
-            category = None
-        if amount is not None and amount is not '':
-            if category:
-                menu_items = [i.name for i in MenuItem.objects.filter(deleted=False, price__lt=amount, category__name=category)]
-            else:
-                menu_items = [i.name for i in MenuItem.objects.filter(deleted=False, price__lt=amount)]
-            if menu_items:
-                message = ('The following options are under ${0}: '
-                           ''.format(amount) + ', '.join(menu_items))
-            else:
-                message = 'I\'m sorry, we have nothing under ${0}'.format(amount)
-        else:
-            message = "Sorry, could you try being more specific"
+    message = get_action_response(req)
 
     body = {
         "fulfillmentText": message,
