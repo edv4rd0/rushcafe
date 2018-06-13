@@ -35,8 +35,8 @@
     <tbody>
 {% for category in menu_category_list %}
         <tr>
-            <th scope="row">{{category.id}}</th>
-            <td>{{category.name}}<a class="float-right btn btn-outline-info ml-auto" href="{% url 'menu-category' category.id %}">Edit</a></td>
+            </a><th scope="row">{{category.id}}</th>
+            <td>{{category.name}}<a class="float-right btn btn-outline-info ml-auto" href="{% url 'menu-category' category.id %}">Edit</a><a class="float-right btn btn-outline-primary mr-2" href="{% url 'menu-category-view' category.id %}">View</a></td>
         </tr>
 {% endfor %}
     </tbody>

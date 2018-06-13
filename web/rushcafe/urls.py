@@ -20,6 +20,8 @@ urlpatterns = [
     path('menucategories/new/',
          views.new_menu_category, name='menu-category-add'),
     path('menucategories/<int:pk>/',
+         views.menu_category, name='menu-category-view'),
+    path('menucategories/<int:pk>/edit/',
          views.MenuCategoryView.as_view(), name='menu-category'),
     path('menucategories/<int:pk>/delete/',
          views.delete_menu_category, name='menu-category-delete'),

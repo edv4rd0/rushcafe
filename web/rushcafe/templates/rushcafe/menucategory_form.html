@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% load cssfilters %}
-<h2 class="display-5 mt-5">Menu Category</h1>
+<h2 class="display-5 mt-5">Menu Category</h2>
     <p class="lead mb-5">View and edit your menu category below.</p>
 <form class="form" action="{% url 'menu-category' menucategory.id %}" method="post">
         {% csrf_token %}

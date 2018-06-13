@@ -69,6 +69,19 @@ def new_menu_category(request):
     return render(request, 'rushcafe/category_new.html', {'form': form})
 
 
+@login_required
+def menu_category(request, pk):
+    menu_category = get_object_or_404(MenuCategory, pk=pk)
+    menu_items = MenuItem.objects.filter(deleted=False, category=menu_category)
+
+    paginator = Paginator(menu_items, 5)
+
+    page = request.GET.get('page')
+    items = paginator.get_page(page)
+
+    return render(request, 'rushcafe/category.html', {'category': menu_category, 'menu_items_list': items})
+
+
 @permission_required('rushcafe.delete_menucategory')
 def delete_menu_category(request, pk):
     menu_category = get_object_or_404(MenuCategory, pk=pk)

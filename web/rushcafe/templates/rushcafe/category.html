@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Menu Category {{ category.name }}{% endblock %}
+
+{% block content %}
+{% load cssfilters %}
+<a class="float-right btn btn-outline-info ml-auto" href="{% url 'menu-category' category.id %}">Edit</a><h2 class="display-5 mt-5">{{ category.name }}</h2>
+<p class="lead mb-5">Menu options in {{ category.name|lower }} below.</p>
+
+<table class="table table-striped">
+<table class="mt-5 table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Category</th>
+        </tr>
+    </thead>
+    <tbody>    
+{% for item in menu_items_list %}
+        <tr>
+            <th scope="row">{{ item.id }}</th>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.category }}<a class="float-right btn btn-outline-info ml-auto" href="{% url 'menu-item' item.id %}">Edit</a></td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+<span class="step-links">
+    {% if menu_items_list.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ menu_items_list.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ menu_items_list.number }} of {{ menu_items_list.paginator.num_pages }}.
+    </span>
+
+    {% if menu_items_list.has_next %}
+        <a href="?page={{ menu_items_list.next_page_number }}">next</a>
+        <a href="?page={{ menu_items_list.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+</span>
+</div>
+
+{% endblock %}
