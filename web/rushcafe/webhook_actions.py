@@ -1,6 +1,10 @@
+import string
 from decimal import Decimal, InvalidOperation
 
 from rushcafe.models import MenuCategory, MenuItem
+
+
+translator = str.maketrans('', '', string.punctuation)
 
 
 def get_category(req):
@@ -8,7 +12,7 @@ def get_category(req):
         category_param = req['queryResult']['parameters']['menu-category']
     except KeyError:
         return None
-    category = MenuCategory.objects.filter(name__contains=category_param, deleted=False).first()
+    category = MenuCategory.objects.filter(name__contains=category_param.translate(translator), deleted=False).first()
     return category
 
 
@@ -38,31 +42,32 @@ def get_action_response(req):
     
     Really need to refactor with the text strings out."""
 
-    print(req)
-
     action = req['queryResult']['action']
     message = "Can't help sorry"
 
     if action == 'get-menu-categories':
         result_data = [c.name for c in MenuCategory.objects.filter(deleted=False)]
-        message = 'We have the following categories on our menu: ' + ', '.join(result_data)
-        print(message)
+        if result_data:
+            return 'We have the following categories on our menu: ' + ', '.join(result_data)
+        return 'A cafe with no menu!'
     elif action == 'get-menu-items':
         result_data = [i.name for i in get_menu_items()]
-        message = 'We have the following options on our menu: ' + ', '.join(result_data)
+        if result_data:
+            return 'We have the following options on our menu: ' + ', '.join(result_data)
+        return 'No options on our menu sorry'
     elif action == 'get-items-in-category':
         category = get_category(req)
         if category:
             result_data = [i.name for i in get_menu_items(category=category)]
-            message = 'We have the following options in {0}: '.format(category.name) + ', '.join(result_data)
-        else:
-            message = 'We don\'t have that category on our menu, sorry'
+            if result_data:
+                return 'We have the following options in {0}: '.format(category.name) + ', '.join(result_data)
+            return 'No options under that menu category, sorry'
+        return 'We don\'t have that category on our menu, sorry'
     elif action == 'get-cheapest-item':
         menu_item = MenuItem.objects.filter(deleted=False).order_by('price').first()
         if menu_item:
-            message = '{0} is our cheapest item on the menu at ${1}'.format(menu_item.name, menu_item.price)
-        else:
-            message = 'We have nothing on our menu'
+            return '{0} is our cheapest item on the menu at ${1}'.format(menu_item.name, menu_item.price)
+        return 'We have nothing on our menu'
     elif action == 'menu-items-under-price':
         amount = get_param_amount(req)
         category = get_category(req)
@@ -70,11 +75,14 @@ def get_action_response(req):
         if amount is not None and amount is not '':
             menu_items = [i.name for i in get_menu_items(category=category, less_than_price=amount)]
             if menu_items:
-                message = ('The following options are under ${0}: '
-                           ''.format(amount) + ', '.join(menu_items))
+                if category:
+                    return ('The following options in {0} are under ${1}: '
+                           ''.format(category.name, amount) + ', '.join(menu_items))
+                return ('The following options are under ${0}: '
+                        ''.format(amount) + ', '.join(menu_items))
             else:
-                message = 'I\'m sorry, we have nothing under ${0}'.format(amount)
+                return 'I\'m sorry, we have nothing under ${0}'.format(amount)
         else:
-            message = "Sorry, could you try being more specific"
+            return "Sorry, could you try being more specific"
 
     return message
